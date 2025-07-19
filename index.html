@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hand with Letters</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #e5f7d5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .image-container {
+      position: relative;
+      width: 350px;
+      height: 500px;
+      background-image: url('01.png'); /* your initial hand image */
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .letter {
+      position: absolute;
+      color: #006400;
+      font-size: 36px;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .new-letter {
+      font-weight: 300 !important;
+      font-family: Arial, sans-serif !important;
+    }
+
+    /* Individual Letters Positioned and Rotated */
+    .c { top: 210px; left: 40px; transform: rotate(-35deg); }
+    .o { top: 95px;  left: 99.3px; transform: rotate(-15deg); }
+    .u { top: 70px;  left: 174px; transform: rotate(0deg); }
+    .g { top: 80px;  right: 77px; transform: rotate(15deg); }
+    .h { top: 135px; right: 26.5px; transform: rotate(30deg); }
+  </style>
+</head>
+<body>
+
+  <div class="image-container" id="container">
+    <div class="letter c">C</div>
+    <div class="letter o">O</div>
+    <div class="letter u">U</div>
+    <div class="letter g">G</div>
+    <div class="letter h">H</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sequence = ['c','o','u','g','h'];
+      let index = 0;
+
+      const container = document.getElementById('container');
+      const letters = sequence.reduce((acc, cls) => {
+        acc[cls] = container.querySelector(`.letter.${cls}`);
+        return acc;
+      }, {});
+
+      sequence.forEach(cls => {
+        letters[cls].addEventListener('click', () => handleClick(cls));
+      });
+
+      function handleClick(clicked) {
+        const expected = sequence[index];
+        if (clicked !== expected) {
+          // Wrong letter clicked
+          if (index === 0) {
+            alert('Please first click on C');
+          } else {
+            alert(`Please click on ${expected.toUpperCase()} next`);
+          }
+          return;
+        }
+
+        // If this is the final letter 'h'
+        if (clicked === 'h' && index === sequence.length - 1) {
+          // Remove all letters
+          container.innerHTML = '';
+          // Swap the image to img2.png
+          container.style.backgroundImage = "url('img2.png')";
+          container.style.backgroundSize = 'contain';
+          container.style.backgroundPosition = 'center';
+          container.style.backgroundRepeat = 'no-repeat';
+          return;
+        }
+
+        // For C, O, U, G: just replace the letter
+        const el = letters[clicked];
+        el.classList.add('new-letter');
+
+        switch (clicked) {
+          case 'c':
+            el.textContent = 'K';
+            el.style.color = 'black';
+            break;
+          case 'o':
+            el.textContent = 'O';
+            el.style.color = '#93C33B';
+            break;
+          case 'u':
+            el.textContent = 'F';
+            el.style.color = 'black';
+            break;
+          case 'g':
+            el.textContent = 'O';
+            el.style.color = 'black';
+            break;
+        }
+
+        index++;
+      }
+    });
+  </script>
+
+</body>
+</html>
